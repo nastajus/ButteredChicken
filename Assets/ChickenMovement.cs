@@ -8,11 +8,15 @@ public class ChickenMovement : MonoBehaviour {
     Transform chefTransform;
     SpriteRenderer sr;
 
+    float timeLeftToCatchChicken;
+    bool winConditionTriggered = false;
+
 	// Use this for initialization
 	void Start () {
         chickenBounds = IanUtils.CameraOrthographicBounds(Camera.main);
         chefTransform = GameObject.Find("chef").transform;
         sr = GetComponent<SpriteRenderer>();
+        timeLeftToCatchChicken = 3f;
     }
 	
 	// Update is called once per frame
@@ -24,12 +28,12 @@ public class ChickenMovement : MonoBehaviour {
 
         if (transform.position.x >= chickenBounds.extents.x - 1){
             direction *= -1;
-            print("flipped");
+            //print("flipped");
         }
         else if (transform.position.x <= -chickenBounds.extents.x + 1)
         {
             direction *= -1;
-            print("flipped 2");
+            //print("flipped 2");
         }
 
         if (DetectChickenOnChef(transform, chefTransform))
@@ -39,6 +43,18 @@ public class ChickenMovement : MonoBehaviour {
         else
         {
             sr.color = Color.red;
+            timeLeftToCatchChicken -= Time.deltaTime;
+        }
+
+        //WinCondition
+        if (timeLeftToCatchChicken <= 0 && !winConditionTriggered)
+        {
+            winConditionTriggered = true;
+            //insert win stuff here.
+            print("WIN");
+
+            //flip chicken 
+            transform.localScale *= -1;
         }
 
 	}
